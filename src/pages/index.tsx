@@ -6,7 +6,7 @@ import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { count } from "console";
+import { Card } from "@mui/material";
 // const Hoge = dynamic(() => import(""), { ssr: false });
 const inter = Inter({ subsets: ["latin"] });
 interface dt {
@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   };
 };
 export default function Home({ data }: dt) {
-  const [aa, setAA] = useState<string | null>();
+  const [aa, setAA] = useState<string | null>("/next.svg");
   const [ppp, setPPP] = useState<number | null>();
   const [pppp, setPPPP] = useState<number | null>();
   const router = useRouter();
@@ -82,6 +82,7 @@ export default function Home({ data }: dt) {
     //   lang: pppp,
     // };
     console.log(data);
+    console.log(aa);
     router.push(
       {
         pathname: "/",
@@ -107,7 +108,7 @@ export default function Home({ data }: dt) {
         style={{ maxWidth: "100%", opacity: 0.7 }}
       ></video>
       {ppp} <button onClick={push}>push</button>
-      <img src={aa + ""} alt="" />
+      <Card component="img" src={aa + ""} alt="" width={50} height="auto" />
     </div>
   );
 }
