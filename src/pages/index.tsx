@@ -3,10 +3,20 @@ import Header from "./component/Header";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Card } from "@mui/material";
+import {
+  Button,
+  Card,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import Link from "next/link";
 // const Hoge = dynamic(() => import(""), { ssr: false });
 const inter = Inter({ subsets: ["latin"] });
 interface dt {
@@ -56,6 +66,7 @@ export default function Home({ data }: dt) {
   const [aa, setAA] = useState<string | null>("/next.svg");
   const [ppp, setPPP] = useState<number | null>();
   const [pppp, setPPPP] = useState<number | null>();
+  const [range, setRange] = useState<string>("1");
   const router = useRouter();
   const pp = () => {
     navigator.geolocation.getCurrentPosition(suc, err);
@@ -76,6 +87,16 @@ export default function Home({ data }: dt) {
     push;
     getServerSideProps;
   });
+  const ppus = () => {
+    console.log(ppp);
+    router.push(
+      {
+        pathname: "/results",
+        query: { lat: ppp, lang: pppp, range: range },
+      },
+      "/results"
+    );
+  };
   const push = () => {
     // const query = {
     //   lat: ppp,
@@ -96,19 +117,93 @@ export default function Home({ data }: dt) {
       setAA("aa");
     }
   };
+
   return (
-    <div id="app">
-      <Header />
-      <video
-        src="/gourmet.mp4"
-        muted
-        autoPlay
-        loop
-        width="auto"
-        style={{ maxWidth: "100%", opacity: 0.7 }}
-      ></video>
-      {ppp} <button onClick={push}>push</button>
-      <Card component="img" src={aa + ""} alt="" width={50} height="auto" />
+    <div className={styles.apps}>
+      <main className={styles.main}>
+        <div
+          style={{
+            width: "auto",
+            height: "100vh",
+            overflowY: "hidden",
+            position: "absolute",
+            display: "flex",
+          }}
+        >
+          <video
+            src="/gourmet.mp4"
+            poster="/backpos.png"
+            playsInline
+            muted
+            autoPlay
+            loop
+            className={styles.vid}
+          ></video>
+          <div className={styles.content}>
+            <div className={styles.c_left}>
+              <div className={styles.left_cmp}>
+                <h1 className={styles.h1}>
+                  <p>Fit</p>
+                  <p>&</p>
+                  <p>Eat</p>
+                </h1>
+                <h2 className={styles.small}>
+                  <small>product by kei</small>
+                </h2>
+              </div>
+            </div>
+            <div className={styles.c_right}>
+              {/* {ppp} <button onClick={push}>push</button>
+              <Card
+                component="img"
+                src={aa + ""}
+                alt=""
+                width={50}
+                height="auto"
+              />
+              <Link href="/results">aaa</Link>
+              <Card>
+                <p>aaa</p>
+              </Card> */}
+              <div className={styles.right_cmp}>
+                <label htmlFor="shopName">店舗名</label>
+                <input type="text" className={styles.names} name="shopName" />
+                <br />
+                <FormControl
+                  component="div"
+                  variant="standard"
+                  sx={{ minWidth: 120 }}
+                  className={styles.range}
+                >
+                  <InputLabel id="demo-simple-select-standard-label">
+                    Age
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    label="Age"
+                    value={range}
+                    onChange={(e) => {
+                      if (e.target.value !== undefined) {
+                        setRange(e.target.value as string);
+                      }
+                    }}
+                  >
+                    <MenuItem value={"1"}>300m</MenuItem>
+                    <MenuItem value={"2"}>500m</MenuItem>
+                    <MenuItem value={"3"}>1000m</MenuItem>
+                    <MenuItem value={"4"}>2000m</MenuItem>
+                    <MenuItem value={"5"}>3000m</MenuItem>
+                  </Select>
+                </FormControl>
+                <Button variant="contained" color="success" onClick={ppus}>
+                  Serch
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
