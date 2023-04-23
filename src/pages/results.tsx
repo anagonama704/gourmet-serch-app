@@ -6,20 +6,27 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  TextField,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
-import {
+import React, {
   JSXElementConstructor,
   Key,
   ReactElement,
   ReactFragment,
   ReactPortal,
   useEffect,
+  useRef,
   useState,
 } from "react";
+import PlaceIcon from "@mui/icons-material/Place";
 import styles from "@/styles/Results.module.css";
+import { useRouter } from "next/router";
+import Footer from "./component/Footer";
+import axios from "axios";
+import Results_detail from "./results_detail";
 
 type budgetType = {
   average: string;
@@ -114,11 +121,35 @@ type dres = {
 type dt = {
   data: dres;
 };
+interface geo {
+  coords: coo;
+}
+interface coo {
+  latitude: number | null;
+  longitude: number | null;
+  altitude: number | null;
+  accuracy: number | null;
+  altitudeAccuracy: number | null;
+  heading: number | null;
+  speed: number | null;
+}
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   console.log(context.query.lat);
-  let lat: string = String(context.query.lat);
-  let lang: string = String(context.query.lang);
-  let range: string = String(context.query.range);
+  const pp = () => {
+    navigator.geolocation.getCurrentPosition(suc, err);
+  };
+  const suc = (geos: geo) => {
+    const lat: string = String(geos.coords.latitude);
+    const lang: string = String(geos.coords.longitude);
+    console.log("succ");
+  };
+  const err = () => {
+    console.log("err");
+  };
+  pp;
+  const lat: string = String(context.query.lat);
+  const lang: string = String(context.query.lang);
+  const range: string = String(context.query.range);
   // if (!context.query) {
   //   lat = 33;
   //   lang = 23;
@@ -137,51 +168,139 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     },
   };
 };
+
 const Results = ({ data }: dt) => {
   const [res, setRes] = useState<resType[]>([]);
+  const [detailData, setDetailData] = useState<resType[]>([]);
   const psp = () => {
     console.log(data);
     setRes(data.results.shop);
     console.log(res[0]);
   };
 
+  const refs = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
   useEffect(() => {
-    psp;
+    if (res == undefined) {
+      router.push(
+        {
+          pathname: "/",
+        },
+        "/"
+      );
+    }
+    window.addEventListener("beforeunload", (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    });
+    refs.current?.click;
+  });
+  useEffect(() => {
+    const rrr = data.results.shop;
+    setRes(rrr);
+    getServerSideProps;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+  const detail = (e: React.MouseEvent<HTMLDivElement>) => {
+    const detailData: string = data.results.shop[Number(e.currentTarget.id)].id;
+    router.push(
+      {
+        pathname: "/results_detail",
+        query: { shopId: detailData },
+      },
+      "/results_detail"
+    );
+  };
   return (
     <div className={styles.results}>
       <Header />
       <div className="res">
         <main className={styles.main}>
-          <Box component="div" className={styles.serch}>
-            aaa
-          </Box>
+          <Card component="div" className={styles.serch}>
+            <div className={styles.inputarea}>
+              <label htmlFor="shopname">店舗名称</label>
+              <br />
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                size="small"
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: "5px",
+                  margin: "10px 0 10px 0",
+                }}
+                name="shopname"
+                placeholder="店舗名称"
+              />
+              <br />
+              <label htmlFor="shopname">ジャンル名称</label>
+              <br />
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                size="small"
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: "5px",
+                  margin: "10px 0 0 0",
+                }}
+                name="shopname"
+                placeholder="ジャンル名称"
+              />
+            </div>
+          </Card>
           <Box component="div" className={styles.resDez}>
             {res.map((ress, index) => {
               return (
                 <Card
+                  component="div"
+                  id={index + ""}
                   key={index}
                   style={{
                     width: "30%",
-                    height: "300px",
+                    height: "420px",
                     margin: "50px 0 0 0",
                   }}
+                  className={styles.rescard}
+                  onClick={detail}
                 >
                   <CardHeader
                     avatar={
                       <img src={ress.logo_image + ""} height={30} alt="ok" />
                     }
                     title={ress.name}
-                    subheader={ress.access}
+                    titleTypographyProps={{
+                      fontSize: "14px",
+                    }}
+                    style={{ height: "30px" }}
+                    // subheader={ress.access}
                   />
                   <CardMedia
                     component="img"
                     width="auto"
-                    height="auto"
+                    height="200px"
                     image={ress.photo.pc.l}
                   />
-                  <CardContent></CardContent>
+                  <CardContent>
+                    <div style={{ display: "flex", padding: "0 0 10px 0" }}>
+                      <Typography
+                        style={{
+                          fontSize: "13px",
+                          fontWeight: "700",
+                        }}
+                      >
+                        定休日：
+                      </Typography>
+                      <Typography style={{ fontSize: "13px" }}>
+                        {ress.close}
+                      </Typography>
+                    </div>
+                    <div style={{ display: "flex" }}>
+                      <PlaceIcon style={{ color: "red" }} />
+                      <Typography style={{ fontSize: "13px" }}>
+                        {ress.access}
+                      </Typography>
+                    </div>
+                  </CardContent>
 
                   {/* <div>{ress.name}</div>
 
@@ -194,11 +313,13 @@ const Results = ({ data }: dt) => {
                 </Card>
               );
             })}
+            <div>
+              <Link href="/">aaa</Link>
+            </div>
+            <Footer />
           </Box>
         </main>
       </div>
-      <Link href="/">aaa</Link>
-      <button onClick={psp}>aaaa</button>
     </div>
   );
 };
