@@ -11,16 +11,34 @@
   justify-content: space-between;
 }
 .serch {
-  width: 20%;
-  height: 93vh;
-  background-color: aqua;
+  width: 25%;
+  height: 85vh;
+  margin: 2% 0 0 3%;
+  border-radius: 20px;
+  background-color: #bbb;
   position: sticky;
-  top: 60px;
+  top: 90px;
+  display: flex;
+  align-items: center;
+}
+.inputarea {
+  width: auto;
+  height: 80%;
+  margin: 0 auto;
 }
 .resDez {
   width: 75%;
   height: auto;
+  padding: 0 50px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+.rescard {
+  transform: scale(1);
+  transition: transform 0.5s;
+}
+.rescard:hover {
+  transform: scale(1.1);
+  transition: transform 0.5s;
 }
