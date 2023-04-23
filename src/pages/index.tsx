@@ -16,6 +16,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Link from "next/link";
 // const Hoge = dynamic(() => import(""), { ssr: false });
 const inter = Inter({ subsets: ["latin"] });
@@ -120,8 +121,9 @@ export default function Home({ data }: dt) {
 
   return (
     <div className={styles.apps}>
-      <main className={styles.main}>
+      <main>
         <div
+          className={styles.mains}
           style={{
             width: "auto",
             height: "100vh",
@@ -166,21 +168,29 @@ export default function Home({ data }: dt) {
                 <p>aaa</p>
               </Card> */}
               <div className={styles.right_cmp}>
-                <label htmlFor="shopName">店舗名</label>
-                <input type="text" className={styles.names} name="shopName" />
-                <br />
+                <LocationOnIcon
+                  style={{
+                    display: "block",
+                    fontSize: 200,
+                    color: "#ccccccaa",
+                  }}
+                />
                 <FormControl
                   component="div"
                   variant="standard"
                   sx={{ minWidth: 120 }}
                   className={styles.range}
                 >
-                  <InputLabel id="demo-simple-select-standard-label">
-                    Age
+                  <InputLabel
+                    id="demo-simple-select-standard-label"
+                    style={{ color: "white" }}
+                  >
+                    検索範囲
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
+                    className={styles.select}
                     label="Age"
                     value={range}
                     onChange={(e) => {
@@ -190,14 +200,19 @@ export default function Home({ data }: dt) {
                     }}
                   >
                     <MenuItem value={"1"}>300m</MenuItem>
-                    <MenuItem value={"2"}>500m</MenuItem>
-                    <MenuItem value={"3"}>1000m</MenuItem>
-                    <MenuItem value={"4"}>2000m</MenuItem>
-                    <MenuItem value={"5"}>3000m</MenuItem>
+                    <MenuItem value={"2"}>　500m</MenuItem>
+                    <MenuItem value={"3"}>　1000m</MenuItem>
+                    <MenuItem value={"4"}>　2000m</MenuItem>
+                    <MenuItem value={"5"}>　3000m</MenuItem>
                   </Select>
                 </FormControl>
-                <Button variant="contained" color="success" onClick={ppus}>
-                  Serch
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={ppus}
+                  style={{ width: "100%" }}
+                >
+                  現在地から検索
                 </Button>
               </div>
             </div>
