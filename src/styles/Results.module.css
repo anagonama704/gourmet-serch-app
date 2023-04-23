@@ -1,0 +1,26 @@
+.results {
+  width: 100%;
+  height: auto;
+  background-color: #eee;
+}
+.main {
+  width: 100%;
+  height: auto;
+
+  display: flex;
+  justify-content: space-between;
+}
+.serch {
+  width: 20%;
+  height: 93vh;
+  background-color: aqua;
+  position: sticky;
+  top: 60px;
+}
+.resDez {
+  width: 75%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
