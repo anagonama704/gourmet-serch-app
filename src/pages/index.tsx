@@ -41,28 +41,7 @@ interface coo {
   heading: number | null;
   speed: number | null;
 }
-export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  console.log(context.query.lat);
-  let lat: string = String(context.query.lat);
-  let lang: string = String(context.query.lang);
-  // if (!context.query) {
-  //   lat = 33;
-  //   lang = 23;
-  // } else {
-  //   lat = context.query.lat;
-  //   lang = context.query.lang;
-  // }
-  const defaultEndpoint: string = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.API_KEY}&format=json&lat=${lat}&lng=${lang}&range=5`;
-  console.log(defaultEndpoint);
-  const res: Response = await fetch(defaultEndpoint);
-  const data: JSON = await res.json();
 
-  return {
-    props: {
-      data,
-    },
-  };
-};
 export default function Home({ data }: dt) {
   const [aa, setAA] = useState<string | null>("/next.svg");
   const [ppp, setPPP] = useState<number | null>();
@@ -86,7 +65,6 @@ export default function Home({ data }: dt) {
     pp();
     suc;
     push;
-    getServerSideProps;
   });
   const ppus = () => {
     console.log(ppp);
@@ -200,10 +178,10 @@ export default function Home({ data }: dt) {
                     }}
                   >
                     <MenuItem value={"1"}>300m</MenuItem>
-                    <MenuItem value={"2"}>　500m</MenuItem>
-                    <MenuItem value={"3"}>　1000m</MenuItem>
-                    <MenuItem value={"4"}>　2000m</MenuItem>
-                    <MenuItem value={"5"}>　3000m</MenuItem>
+                    <MenuItem value={"2"}>500m</MenuItem>
+                    <MenuItem value={"3"}>1000m</MenuItem>
+                    <MenuItem value={"4"}>2000m</MenuItem>
+                    <MenuItem value={"5"}>3000m</MenuItem>
                   </Select>
                 </FormControl>
                 <Button
