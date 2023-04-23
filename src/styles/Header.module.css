@@ -1,5 +1,5 @@
 .header {
-  z-index: 0;
+  z-index: 100;
   width: auto;
   height: 60px;
   margin: 0;
@@ -15,4 +15,8 @@
 .h1 {
   font-size: 25px;
   color: black;
+  font-family: "Caveat", cursive;
+  letter-spacing: 0.5rem;
+  text-align: center;
+  font-weight: 500;
 }
