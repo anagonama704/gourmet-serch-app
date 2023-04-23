@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <Card component="header" className={style.header}>
       <Link href="/" className={style.a}>
-        <h1 className={style.h1}>イートライク</h1>
+        <h1 className={style.h1}>Fit&Eat</h1>
       </Link>
     </Card>
   );
