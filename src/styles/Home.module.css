@@ -2,12 +2,13 @@
   width: 170vw;
   height: 100vh;
   overflow-y: hidden;
-  background-color: #00000050;
-  z-index: 0;
+  z-index: 1;
 }
-.main {
-  width: auto;
+.mains {
+  width: 100%;
+  height: 100vh;
   overflow-y: hidden;
+  background-color: #00000050;
 }
 
 .h1 {
@@ -28,17 +29,7 @@
   background-color: #00000090;
   z-index: -1;
 }
-.vid:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 1);
-  z-index: 0;
-}
+
 .content {
   width: 100%;
   height: 100vh;
@@ -62,13 +53,18 @@
 }
 .c_right {
   width: 41.5%;
-  height: 200px;
+  height: auto;
+  padding: 0 0 50px 0;
 }
 .right_cmp {
   width: fit-content;
   height: auto;
-  margin: 0 10% 0 0;
-  padding: 0;
+  margin: 0 0 0 16%;
+  padding: 30px;
+  background-color: #ffffff05;
+  backdrop-filter: blur(12px);
+  border: 2px #eeeeee10 solid;
+  border-radius: 20px;
 }
 .small {
   font-family: "Caveat", cursive;
@@ -81,18 +77,32 @@
 .names {
   width: 400px;
   height: 50px;
-  padding: 5px 0 0 0;
-  background-color: #eeeeee;
+  border: none;
+  border-radius: 100px;
+  background-color: #ffffff90;
   opacity: 0.8;
+}
+.names:focus {
+  outline: none;
+}
+.names_label {
+  display: block;
+  color: #bbb;
+  padding: 0 0 5px 10px;
 }
 .range {
-  width: 20%;
-  height: 50px;
+  display: block;
+  width: 100%;
+  height: auto;
   padding: 5px 0 0 0;
-  background-color: #eeeeee;
   opacity: 0.8;
 }
-
+.select {
+  width: 100%;
+  height: auto;
+  color: #fff;
+  font-size: 25px;
+}
 .description {
   display: inherit;
   justify-content: inherit;
