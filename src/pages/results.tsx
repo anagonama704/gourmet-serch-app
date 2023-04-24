@@ -350,9 +350,6 @@ const Results = ({ data }: dt) => {
                 </Card>
               );
             })}
-            <div>
-              <Link href="/">aaa</Link>
-            </div>
             <Footer />
           </Box>
         </main>
