@@ -39,6 +39,7 @@
   transition: transform 0.5s;
 }
 .rescard:hover {
+  cursor: pointer;
   transform: scale(1.1);
   transition: transform 0.5s;
 }
