@@ -17,7 +17,7 @@ import {
   TextField,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import Link from "next/link";
+import { motion } from "framer-motion";
 // const Hoge = dynamic(() => import(""), { ssr: false });
 const inter = Inter({ subsets: ["latin"] });
 interface dt {
@@ -98,7 +98,27 @@ export default function Home({ data }: dt) {
   };
 
   return (
-    <div className={styles.apps}>
+    <motion.div
+      variants={{
+        offscreen: {
+          // 画面外の場合のスタイル
+          x: 100,
+          opacity: 0,
+        },
+        onscreen: {
+          // 画面内の場合のスタイル
+          x: 0,
+          opacity: 1,
+          transition: {
+            duration: 0.3,
+          },
+        },
+      }}
+      initial="offscreen" // 初期表示はoffscreen
+      whileInView="onscreen" // 画面内に入ったらonscreen
+      viewport={{ once: false, amount: 0 }}
+      className={styles.apps}
+    >
       <main>
         <div
           className={styles.mains}
@@ -121,7 +141,27 @@ export default function Home({ data }: dt) {
           ></video>
           <div className={styles.content}>
             <div className={styles.c_left}>
-              <div className={styles.left_cmp}>
+              <motion.div
+                variants={{
+                  offscreen: {
+                    // 画面外の場合のスタイル
+                    x: -200,
+                    opacity: 0,
+                  },
+                  onscreen: {
+                    // 画面内の場合のスタイル
+                    x: 0,
+                    opacity: 1,
+                    transition: {
+                      duration: 1,
+                    },
+                  },
+                }}
+                initial="offscreen" // 初期表示はoffscreen
+                whileInView="onscreen" // 画面内に入ったらonscreen
+                viewport={{ once: false, amount: 0 }}
+                className={styles.left_cmp}
+              >
                 <h1 className={styles.h1}>
                   <p>Fit</p>
                   <p>&</p>
@@ -130,7 +170,7 @@ export default function Home({ data }: dt) {
                 <h2 className={styles.small}>
                   <small>product by kei</small>
                 </h2>
-              </div>
+              </motion.div>
             </div>
             <div className={styles.c_right}>
               {/* {ppp} <button onClick={push}>push</button>
@@ -145,7 +185,27 @@ export default function Home({ data }: dt) {
               <Card>
                 <p>aaa</p>
               </Card> */}
-              <div className={styles.right_cmp}>
+              <motion.div
+                variants={{
+                  offscreen: {
+                    // 画面外の場合のスタイル
+                    x: 0,
+                    opacity: 0,
+                  },
+                  onscreen: {
+                    // 画面内の場合のスタイル
+                    x: 0,
+                    opacity: 1,
+                    transition: {
+                      duration: 2,
+                    },
+                  },
+                }}
+                initial="offscreen" // 初期表示はoffscreen
+                whileInView="onscreen" // 画面内に入ったらonscreen
+                viewport={{ once: false, amount: 0 }}
+                className={styles.right_cmp}
+              >
                 <LocationOnIcon
                   style={{
                     display: "block",
@@ -171,6 +231,7 @@ export default function Home({ data }: dt) {
                     className={styles.select}
                     label="Age"
                     value={range}
+                    style={{ color: "#fff" }}
                     onChange={(e) => {
                       if (e.target.value !== undefined) {
                         setRange(e.target.value as string);
@@ -192,11 +253,11 @@ export default function Home({ data }: dt) {
                 >
                   現在地から検索
                 </Button>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </main>
-    </div>
+    </motion.div>
   );
 }

@@ -25,8 +25,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 import styles from "@/styles/Results.module.css";
 import { useRouter } from "next/router";
 import Footer from "./component/Footer";
-import axios from "axios";
-import Results_detail from "./results_detail";
+import { motion } from "framer-motion";
 
 type budgetType = {
   average: string;
@@ -211,7 +210,27 @@ const Results = ({ data }: dt) => {
     );
   };
   return (
-    <div className={styles.results}>
+    <motion.div
+      variants={{
+        offscreen: {
+          // 画面外の場合のスタイル
+          y: 100,
+          opacity: 0,
+        },
+        onscreen: {
+          // 画面内の場合のスタイル
+          y: 0,
+          opacity: 1,
+          transition: {
+            duration: 0.3,
+          },
+        },
+      }}
+      initial="offscreen" // 初期表示はoffscreen
+      whileInView="onscreen" // 画面内に入ったらonscreen
+      viewport={{ once: false, amount: 0 }}
+      className={styles.results}
+    >
       <Header />
       <div className="res">
         <main className={styles.main}>
@@ -252,7 +271,7 @@ const Results = ({ data }: dt) => {
             {res.map((ress, index) => {
               return (
                 <Card
-                  component="div"
+                  component={motion.div}
                   id={index + ""}
                   key={index}
                   style={{
@@ -260,6 +279,24 @@ const Results = ({ data }: dt) => {
                     height: "420px",
                     margin: "50px 0 0 0",
                   }}
+                  variants={{
+                    offscreen: {
+                      // 画面外の場合のスタイル
+                      y: 100,
+                      opacity: 0,
+                    },
+                    onscreen: {
+                      // 画面内の場合のスタイル
+                      y: 0,
+                      opacity: 1,
+                      transition: {
+                        duration: 0.3,
+                      },
+                    },
+                  }}
+                  initial="offscreen" // 初期表示はoffscreen
+                  whileInView="onscreen" // 画面内に入ったらonscreen
+                  viewport={{ once: false, amount: 0 }}
                   className={styles.rescard}
                   onClick={detail}
                 >
@@ -320,7 +357,7 @@ const Results = ({ data }: dt) => {
           </Box>
         </main>
       </div>
-    </div>
+    </motion.div>
   );
 };
 export default Results;
