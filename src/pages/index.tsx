@@ -231,7 +231,7 @@ export default function Home({ data }: dt) {
                     className={styles.select}
                     label="Age"
                     value={range}
-                    style={{ color: "#fff" }}
+                    style={{ color: "#fff", fontSize: "25px" }}
                     onChange={(e) => {
                       if (e.target.value !== undefined) {
                         setRange(e.target.value as string);
