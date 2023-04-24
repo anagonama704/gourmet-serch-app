@@ -2,9 +2,20 @@ import axios from "axios";
 import next, { GetServerSideProps } from "next/types";
 import { useEffect } from "react";
 import Header from "./component/Header";
-import styles from "@/styles/ResultsDetail.module.css";
-import { Card, CardContent, CardHeader } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardHeader,
+  IconButton,
+} from "@mui/material";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
+import LanguageIcon from "@mui/icons-material/Language";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import { motion } from "framer-motion";
+import styles from "@/styles/ResultsDetail.module.css";
+import Footer from "./component/Footer";
 type budgetType = {
   average: string;
   code: string;
@@ -114,7 +125,27 @@ const Results_detail = ({ data }: dt) => {
   console.log(data);
   useEffect(() => {}, []);
   return (
-    <div className={styles.results_detail}>
+    <motion.div
+      variants={{
+        offscreen: {
+          // 画面外の場合のスタイル
+          y: 100,
+          opacity: 0,
+        },
+        onscreen: {
+          // 画面内の場合のスタイル
+          y: 0,
+          opacity: 1,
+          transition: {
+            duration: 0.5,
+          },
+        },
+      }}
+      initial="offscreen" // 初期表示はoffscreen
+      whileInView="onscreen" // 画面内に入ったらonscreen
+      viewport={{ once: false, amount: 0 }}
+      className={styles.results_detail}
+    >
       <Header />
       <main className={styles.main}>
         {data.results.shop.map((ress, index) => {
@@ -124,24 +155,91 @@ const Results_detail = ({ data }: dt) => {
                 <CardHeader
                   title={
                     <div style={{ display: "flex" }}>
-                      <RestaurantIcon />
+                      <RestaurantIcon
+                        style={{ color: "red", fontSize: "20px" }}
+                      />
                       {"　" + ress.genre.name}
                     </div>
                   }
                   titleTypographyProps={{
                     fontSize: "15px",
                   }}
-                  style={{ height: "20px", margin: "20px 0 0 0" }}
+                  style={{ height: "20px" }}
                 />
-                <CardContent>
-                  <h2 className={styles.h2}>{ress.name}</h2>
+                <CardContent style={{ height: "300px" }}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <div
+                      style={{
+                        width: "60%",
+                        maxHeight: "300px",
+                        overflowY: "auto",
+                      }}
+                    >
+                      <h2 className={styles.h2}>{ress.name}</h2>
+                      <h3 style={{ padding: "10px 0 0 0" }}>{ress.catch}</h3>
+                      <p style={{ padding: "10px 0 0 0" }}>{ress.catch}</p>
+                      <div
+                        style={{
+                          width: "90%",
+                          height: "auto",
+                          padding: "20px 10px",
+                        }}
+                      >
+                        <p className={styles.subc}>住所：{ress.address}</p>
+                        <p className={styles.subc}>アクセス：{ress.access}</p>
+                        <p className={styles.subc}>営業時間：{ress.open}</p>
+                        <p className={styles.subc}>
+                          ディナー予算：{ress.budget.average}
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        display: "block",
+                        width: "50%",
+                        height: "300px",
+                        backgroundImage: `url(${ress.photo.pc.l})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    ></div>
+                  </div>
                 </CardContent>
+                <CardActions>
+                  <IconButton href={ress.urls.pc} target="_blank">
+                    <div
+                      style={{
+                        display: "flex",
+                        fontSize: "15px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <LanguageIcon />
+                      店舗WEBサイト
+                    </div>
+                  </IconButton>
+                  <IconButton href={ress.coupon_urls.pc} target="_blank">
+                    <div
+                      style={{
+                        display: "flex",
+                        fontSize: "15px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <ConfirmationNumberIcon />
+                      クーポン
+                    </div>
+                  </IconButton>
+                </CardActions>
               </div>
             </Card>
           );
         })}
       </main>
-    </div>
+      <Footer />
+    </motion.div>
   );
 };
 export default Results_detail;
