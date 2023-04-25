@@ -1,8 +1,10 @@
 import axios from "axios";
 import next, { GetServerSideProps } from "next/types";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 import Header from "./component/Header";
 import {
+  Button,
   Card,
   CardActionArea,
   CardActions,
@@ -16,6 +18,7 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { motion } from "framer-motion";
 import styles from "@/styles/ResultsDetail.module.css";
 import Footer from "./component/Footer";
+import { ArrowBackIosNewOutlined } from "@mui/icons-material";
 type budgetType = {
   average: string;
   code: string;
@@ -122,6 +125,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   };
 };
 const Results_detail = ({ data }: dt) => {
+  const router = useRouter();
   console.log(data);
   useEffect(() => {}, []);
   return (
@@ -177,9 +181,11 @@ const Results_detail = ({ data }: dt) => {
                         overflowY: "auto",
                       }}
                     >
+                      <h3 style={{ padding: "10px 0 1px 0", fontSize: "13px" }}>
+                        {ress.name_kana}
+                      </h3>
                       <h2 className={styles.h2}>{ress.name}</h2>
                       <h3 style={{ padding: "10px 0 0 0" }}>{ress.catch}</h3>
-                      <p style={{ padding: "10px 0 0 0" }}>{ress.catch}</p>
                       <div
                         style={{
                           width: "90%",
@@ -233,6 +239,18 @@ const Results_detail = ({ data }: dt) => {
                     </div>
                   </IconButton>
                 </CardActions>
+                <Button
+                  variant="contained"
+                  style={{ display: "block", margin: "0 auto" }}
+                  onClick={() => {
+                    router.back();
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <ArrowBackIosNewOutlined />
+                    戻る
+                  </div>
+                </Button>
               </div>
             </Card>
           );
