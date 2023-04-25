@@ -26,6 +26,7 @@ import styles from "@/styles/Results.module.css";
 import { useRouter } from "next/router";
 import Footer from "./component/Footer";
 import { motion } from "framer-motion";
+import { redirect } from "next/dist/server/api-utils";
 
 type budgetType = {
   average: string;
@@ -113,6 +114,7 @@ type resType = {
 };
 type shops = {
   shop: resType[];
+  results_returned: string;
 };
 type dres = {
   results: shops;
@@ -132,43 +134,14 @@ interface coo {
   heading: number | null;
   speed: number | null;
 }
-export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  console.log(context.query.lat);
-  const pp = () => {
-    navigator.geolocation.getCurrentPosition(suc, err);
-  };
-  const suc = (geos: geo) => {
-    const lat: string = String(geos.coords.latitude);
-    const lang: string = String(geos.coords.longitude);
-    console.log("succ");
-  };
-  const err = () => {
-    console.log("err");
-  };
-  pp;
-  const lat: string = String(context.query.lat);
-  const lang: string = String(context.query.lang);
-  const range: string = String(context.query.range);
-  // if (!context.query) {
-  //   lat = 33;
-  //   lang = 23;
-  // } else {
-  //   lat = context.query.lat;
-  //   lang = context.query.lang;
-  // }
-  const defaultEndpoint: string = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.API_KEY}&format=json&count=100&lat=${lat}&lng=${lang}&range=${range}`;
-  console.log(defaultEndpoint);
-  const res: Response = await fetch(defaultEndpoint);
-  const data: dt = await res.json();
-
-  return {
-    props: {
-      data,
-    },
-  };
-};
 
 const Results = ({ data }: dt) => {
+  const router = useRouter();
+  if (typeof data == undefined) {
+    alert("ok");
+    router.back();
+  } else {
+  }
   const [res, setRes] = useState<resType[]>([]);
   const [detailData, setDetailData] = useState<resType[]>([]);
   const psp = () => {
@@ -176,23 +149,20 @@ const Results = ({ data }: dt) => {
     setRes(data.results.shop);
     console.log(res[0]);
   };
+  // if (data == undefined && localStorage.getItem("datas") == undefined) {
+  //   setRes(JSON.parse(localStorage.getItem("datas") || ""));
+  // } else {
+  // }
+  // if (data !== undefined) {
+  //   localStorage.setItem("datas", JSON.stringify(data));
+  // } else {
+  // }
 
-  const refs = useRef<HTMLButtonElement>(null);
-  const router = useRouter();
-  useEffect(() => {
-    if (res == undefined) {
-      router.push(
-        {
-          pathname: "/",
-        },
-        "/"
-      );
-    }
-    window.addEventListener("beforeunload", (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-    });
-    refs.current?.click;
-  });
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", (e: BeforeUnloadEvent) => {
+  //     e.preventDefault();
+  //   });
+  // });
   useEffect(() => {
     const rrr = data.results.shop;
     setRes(rrr);
@@ -208,6 +178,9 @@ const Results = ({ data }: dt) => {
       },
       "/results_detail"
     );
+  };
+  const ok = () => {
+    console.log(localStorage.getItem("rangs"));
   };
   return (
     <motion.div
@@ -231,6 +204,7 @@ const Results = ({ data }: dt) => {
       viewport={{ once: false, amount: 0 }}
       className={styles.results}
     >
+      {/* {data.results.results_returned} */}
       <Header />
       <div className="res">
         <main className={styles.main}>
@@ -268,78 +242,84 @@ const Results = ({ data }: dt) => {
             </div>
           </Card>
           <Box component="div" className={styles.resDez}>
-            {res.map((ress, index) => {
-              return (
-                <Card
-                  component={motion.div}
-                  id={index + ""}
-                  key={index}
-                  style={{
-                    width: "30%",
-                    height: "420px",
-                    margin: "50px 0 0 0",
-                  }}
-                  variants={{
-                    offscreen: {
-                      // 画面外の場合のスタイル
-                      y: 100,
-                      opacity: 0,
-                    },
-                    onscreen: {
-                      // 画面内の場合のスタイル
-                      y: 0,
-                      opacity: 1,
-                      transition: {
-                        duration: 0.3,
-                      },
-                    },
-                  }}
-                  initial="offscreen" // 初期表示はoffscreen
-                  whileInView="onscreen" // 画面内に入ったらonscreen
-                  viewport={{ once: false, amount: 0 }}
-                  className={styles.rescard}
-                  onClick={detail}
-                >
-                  <CardHeader
-                    avatar={
-                      <img src={ress.logo_image + ""} height={30} alt="ok" />
-                    }
-                    title={ress.name}
-                    titleTypographyProps={{
-                      fontSize: "14px",
+            {res
+              .map((ress, index) => {
+                return (
+                  <Card
+                    component={motion.div}
+                    id={index + ""}
+                    key={index}
+                    style={{
+                      width: "30%",
+                      height: "420px",
+                      margin: "50px 0 0 0",
                     }}
-                    style={{ height: "30px" }}
-                    // subheader={ress.access}
-                  />
-                  <CardMedia
-                    component="img"
-                    width="auto"
-                    height="200px"
-                    image={ress.photo.pc.l}
-                  />
-                  <CardContent>
-                    <div style={{ display: "flex", padding: "0 0 10px 0" }}>
-                      <Typography
-                        style={{
-                          fontSize: "13px",
-                          fontWeight: "700",
-                        }}
-                      >
-                        定休日：
-                      </Typography>
-                      <Typography style={{ fontSize: "13px" }}>
-                        {ress.close}
-                      </Typography>
-                    </div>
-                    <div style={{ display: "flex" }}>
-                      <PlaceIcon style={{ color: "red" }} />
-                      <Typography style={{ fontSize: "13px" }}>
-                        {ress.access}
-                      </Typography>
-                    </div>
-                  </CardContent>
+                    variants={{
+                      offscreen: {
+                        // 画面外の場合のスタイル
+                        y: 100,
+                        opacity: 0,
+                      },
+                      onscreen: {
+                        // 画面内の場合のスタイル
+                        y: 0,
+                        opacity: 1,
+                        transition: {
+                          duration: 0.3,
+                        },
+                      },
+                    }}
+                    whileHover={{
+                      y: 0,
+                      scale: 1.1,
+                      transition: { duration: 0.3 },
+                    }}
+                    initial="offscreen" // 初期表示はoffscreen
+                    whileInView="onscreen" // 画面内に入ったらonscreen
+                    viewport={{ once: false, amount: 0 }}
+                    className={styles.rescard}
+                    onClick={detail}
+                  >
+                    <CardHeader
+                      avatar={
+                        <img src={ress.logo_image + ""} height={30} alt="ok" />
+                      }
+                      title={ress.name}
+                      titleTypographyProps={{
+                        fontSize: "14px",
+                      }}
+                      style={{ height: "30px" }}
+                      // subheader={ress.access}
+                    />
+                    <CardMedia
+                      component="img"
+                      width="auto"
+                      height="200px"
+                      image={ress.photo.pc.l}
+                    />
+                    <CardContent>
+                      <div style={{ display: "flex", padding: "0 0 10px 0" }}>
+                        <Typography
+                          style={{
+                            fontSize: "13px",
+                            fontWeight: "700",
+                          }}
+                        >
+                          定休日：
+                        </Typography>
+                        <Typography style={{ fontSize: "13px" }}>
+                          {ress.close}
+                        </Typography>
+                      </div>
+                      <div style={{ display: "flex" }}>
+                        <PlaceIcon style={{ color: "red" }} />
+                        <Typography style={{ fontSize: "13px" }}>
+                          {ress.access}
+                        </Typography>
+                      </div>
+                    </CardContent>
 
-                  {/* <div>{ress.name}</div>
+                    {/* <div>{ress.name}</div>
 
               <Image
                 src={ress.logo_image + ""}
@@ -347,14 +327,67 @@ const Results = ({ data }: dt) => {
                 height={100}
                 alt="ok"
               /> */}
-                </Card>
-              );
-            })}
+                  </Card>
+                );
+              })
+              .filter((ress) => ress)}
             <Footer />
           </Box>
         </main>
       </div>
+      <button onClick={ok}>jjj</button>
     </motion.div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  let lat: string;
+  let lang: string;
+  let range: string;
+
+  // Perform localStorage action
+  if (typeof context.query.lat == undefined) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  } else {
+    lat = String(context.query.lat);
+    lang = String(context.query.lang);
+    range = String(context.query.range);
+  }
+
+  // console.log(context.query.lat);
+  // const pp = () => {
+  //   navigator.geolocation.getCurrentPosition(suc, err);
+  // };
+  // const suc = (geos: geo) => {
+  //   const lat: string = String(geos.coords.latitude);
+  //   const lang: string = String(geos.coords.longitude);
+  //   console.log("succ");
+  // };
+  // const err = () => {
+  //   console.log("err");
+  // };
+  // pp;
+  // if (!context.query) {
+  //   lat = 33;
+  //   lang = 23;
+  // } else {
+  //   lat = context.query.lat;
+  //   lang = context.query.lang;
+  // }
+  const defaultEndpoint: string = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.API_KEY}&format=json&count=100&lat=${lat}&lng=${lang}&range=${range}`;
+  console.log(defaultEndpoint);
+  const res: Response = await fetch(defaultEndpoint);
+  const data: dt = (await res.json()) ?? "値なし";
+
+  return {
+    props: {
+      data,
+    },
+  };
 };
 export default Results;
