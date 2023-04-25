@@ -152,28 +152,20 @@ const Results = ({ data }: dt) => {
   }
   const [res, setRes] = useState<resType[]>([]);
   const [detailData, setDetailData] = useState<resType[]>([]);
+  const [resCt, setResCt] = useState<string>();
   const [shopName, setShopName] = useState<string>("");
+  const [genre, setGenre] = useState<string>("");
+  const [budgets, setBudgets] = useState<string>("");
   const psp = () => {
     console.log(data);
     setRes(data.results.shop);
     console.log(res[0]);
   };
-  // if (data == undefined && localStorage.getItem("datas") == undefined) {
-  //   setRes(JSON.parse(localStorage.getItem("datas") || ""));
-  // } else {
-  // }
-  // if (data !== undefined) {
-  //   localStorage.setItem("datas", JSON.stringify(data));
-  // } else {
-  // }
 
-  // useEffect(() => {
-  //   window.addEventListener("beforeunload", (e: BeforeUnloadEvent) => {
-  //     e.preventDefault();
-  //   });
-  // });
   useEffect(() => {
     const rrr = data.results.shop;
+    const cou = data.results.results_returned;
+    setResCt(cou);
     setRes(rrr);
     getServerSideProps;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,19 +180,31 @@ const Results = ({ data }: dt) => {
       "/results_detail"
     );
   };
-  const ok = () => {
-    console.log(localStorage.getItem("rangs"));
+  const serchs = () => {
+    const fullCou = data.results.results_returned;
+    const full = data.results.shop;
+    const ser = data.results.shop.filter(function (ress, index) {
+      if (shopName !== "" && ress.name.includes(shopName)) return true;
+      if (genre !== "" && ress.genre.name.includes(genre)) return true;
+      if (budgets !== "none" && ress.budget.name.includes(budgets)) return true;
+    });
+    const serCount = String(ser.length);
+    if (ser.length == 0) {
+      setResCt(fullCou);
+      setRes(full);
+    } else {
+      setResCt(serCount);
+      setRes(ser);
+    }
   };
   return (
     <motion.div
       variants={{
         offscreen: {
-          // 画面外の場合のスタイル
           y: 100,
           opacity: 0,
         },
         onscreen: {
-          // 画面内の場合のスタイル
           y: 0,
           opacity: 1,
           transition: {
@@ -208,12 +212,11 @@ const Results = ({ data }: dt) => {
           },
         },
       }}
-      initial="offscreen" // 初期表示はoffscreen
-      whileInView="onscreen" // 画面内に入ったらonscreen
+      initial="offscreen"
+      whileInView="onscreen"
       viewport={{ once: false, amount: 0 }}
       className={styles.results}
     >
-      {/* {data.results.results_returned} */}
       <Header />
       <div className="res">
         <main className={styles.main}>
@@ -231,7 +234,7 @@ const Results = ({ data }: dt) => {
                     padding: "0 5px 0 0",
                   }}
                 >
-                  {data.results.results_returned}
+                  {resCt}
                 </p>
                 <p>件見つかりました</p>
               </Typography>
@@ -256,6 +259,9 @@ const Results = ({ data }: dt) => {
                 }}
                 name="shopname"
                 placeholder="店舗名称"
+                onChange={(e) => {
+                  setShopName(e.target.value);
+                }}
               />
               <label
                 htmlFor="shopname"
@@ -277,6 +283,9 @@ const Results = ({ data }: dt) => {
                 }}
                 name="shopname"
                 placeholder="ジャンル名称"
+                onChange={(e) => {
+                  setGenre(e.target.value);
+                }}
               />
               <label
                 htmlFor="budget"
@@ -289,7 +298,6 @@ const Results = ({ data }: dt) => {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 style={{
-                  backgroundColor: "#fff",
                   borderRadius: "5px",
                   margin: "10px 0 0 0",
                   width: "100%",
@@ -297,36 +305,42 @@ const Results = ({ data }: dt) => {
                   fontWeight: "100",
                 }}
                 name="budget"
-                defaultValue={0}
+                onChange={(e) => {
+                  setBudgets(String(e.target.value));
+                }}
+                defaultValue="none"
               >
-                <MenuItem value={0} style={{ fontWeight: "100" }}>
+                <MenuItem value="none" style={{ fontWeight: "100" }}>
                   選択しない
                 </MenuItem>
-                <MenuItem value={1} style={{ fontWeight: "100" }}>
-                  500円〜1000円
+                <MenuItem value={1000} style={{ fontWeight: "100" }}>
+                  〜1000円
                 </MenuItem>
-                <MenuItem value={2} style={{ fontWeight: "100" }}>
-                  2000円〜3000円
+                <MenuItem value={2000} style={{ fontWeight: "100" }}>
+                  〜2000円
                 </MenuItem>
-                <MenuItem value={3} style={{ fontWeight: "100" }}>
-                  3000円〜4000円
+                <MenuItem value={3000} style={{ fontWeight: "100" }}>
+                  〜3000円
                 </MenuItem>
-                <MenuItem value={4} style={{ fontWeight: "100" }}>
-                  4000円〜5000円
+                <MenuItem value={4000} style={{ fontWeight: "100" }}>
+                  〜4000円
                 </MenuItem>
-                <MenuItem value={5} style={{ fontWeight: "100" }}>
-                  5000円〜6000円
+                <MenuItem value={5000} style={{ fontWeight: "100" }}>
+                  〜5000円
                 </MenuItem>
-                <MenuItem value={6} style={{ fontWeight: "100" }}>
-                  6000円〜7000円
+                <MenuItem value={6000} style={{ fontWeight: "100" }}>
+                  〜6000円
                 </MenuItem>
-                <MenuItem value={7} style={{ fontWeight: "100" }}>
-                  7000円〜8000円
+                <MenuItem value={7000} style={{ fontWeight: "100" }}>
+                  〜7000円
                 </MenuItem>
-                <MenuItem value={8} style={{ fontWeight: "100" }}>
-                  9000円〜10000円
+                <MenuItem value={8000} style={{ fontWeight: "100" }}>
+                  〜8000円
                 </MenuItem>
-                <MenuItem value={9} style={{ fontWeight: "100" }}>
+                <MenuItem value={9000} style={{ fontWeight: "100" }}>
+                  〜9000円
+                </MenuItem>
+                <MenuItem value={10000} style={{ fontWeight: "100" }}>
                   10000円以上
                 </MenuItem>
               </Select>
@@ -338,6 +352,7 @@ const Results = ({ data }: dt) => {
                   height: "50px",
                   margin: "50px 0 0 0",
                 }}
+                onClick={serchs}
               >
                 この条件で検索
                 <ArrowForwardIosIcon />
