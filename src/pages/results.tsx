@@ -2,6 +2,7 @@ import next, { GetServerSideProps } from "next/types";
 import Header from "./component/Header";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -24,11 +25,16 @@ import React, {
   useState,
 } from "react";
 import PlaceIcon from "@mui/icons-material/Place";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import CurrencyYenIcon from "@mui/icons-material/CurrencyYen";
+import ArrowBackIosNewOutlined from "@mui/icons-material/ArrowBackIosNewOutlined";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import styles from "@/styles/Results.module.css";
 import { useRouter } from "next/router";
 import Footer from "./component/Footer";
 import { motion } from "framer-motion";
-import { redirect } from "next/dist/server/api-utils";
+import { BorderColor } from "@mui/icons-material";
 
 type budgetType = {
   average: string;
@@ -146,6 +152,7 @@ const Results = ({ data }: dt) => {
   }
   const [res, setRes] = useState<resType[]>([]);
   const [detailData, setDetailData] = useState<resType[]>([]);
+  const [shopName, setShopName] = useState<string>("");
   const psp = () => {
     console.log(data);
     setRes(data.results.shop);
@@ -210,10 +217,34 @@ const Results = ({ data }: dt) => {
       <Header />
       <div className="res">
         <main className={styles.main}>
-          <Card component="div" className={styles.serch}>
+          <Card
+            component="div"
+            className={styles.serch}
+            style={{ backgroundColor: "#fff" }}
+          >
             <div className={styles.inputarea}>
-              <label htmlFor="shopname">店舗名称</label>
+              <Typography style={{ display: "flex", alignItems: "center" }}>
+                <p
+                  style={{
+                    fontSize: "25px",
+                    fontWeight: "800",
+                    padding: "0 5px 0 0",
+                  }}
+                >
+                  {data.results.results_returned}
+                </p>
+                <p>件見つかりました</p>
+              </Typography>
               <br />
+              <label
+                htmlFor="shopname"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <StorefrontIcon
+                  style={{ color: "red", padding: "0 5px 0 0 " }}
+                />
+                店舗名称
+              </label>
               <TextField
                 id="outlined-basic"
                 variant="outlined"
@@ -221,14 +252,20 @@ const Results = ({ data }: dt) => {
                 style={{
                   backgroundColor: "#fff",
                   borderRadius: "5px",
-                  margin: "10px 0 10px 0",
+                  margin: "10px 0 20px 0",
                 }}
                 name="shopname"
                 placeholder="店舗名称"
               />
-              <br />
-              <label htmlFor="shopname">ジャンル名称</label>
-              <br />
+              <label
+                htmlFor="shopname"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <RestaurantIcon
+                  style={{ color: "red", padding: "0 5px 0 0 " }}
+                />
+                ジャンル名称
+              </label>
               <TextField
                 id="outlined-basic"
                 variant="outlined"
@@ -236,14 +273,18 @@ const Results = ({ data }: dt) => {
                 style={{
                   backgroundColor: "#fff",
                   borderRadius: "5px",
-                  margin: "10px 0 10px 0",
+                  margin: "10px 0 20px 0",
                 }}
                 name="shopname"
                 placeholder="ジャンル名称"
-              />{" "}
-              <br />
-              <label htmlFor="budget">予算</label>
-              <br />
+              />
+              <label
+                htmlFor="budget"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <CurrencyYenIcon style={{ color: "red" }} />
+                予算
+              </label>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -252,20 +293,77 @@ const Results = ({ data }: dt) => {
                   borderRadius: "5px",
                   margin: "10px 0 0 0",
                   width: "100%",
+                  height: "43px",
+                  fontWeight: "100",
                 }}
                 name="budget"
-                defaultValue={1}
+                defaultValue={0}
               >
-                <MenuItem value={1}>500円〜1000円</MenuItem>
-                <MenuItem value={2}>2000円〜3000円</MenuItem>
-                <MenuItem value={3}>3000円〜4000円</MenuItem>
-                <MenuItem value={4}>4000円〜5000円</MenuItem>
-                <MenuItem value={5}>5000円〜6000円</MenuItem>
-                <MenuItem value={6}>6000円〜7000円</MenuItem>
-                <MenuItem value={7}>7000円〜8000円</MenuItem>
-                <MenuItem value={8}>9000円〜10000円</MenuItem>
-                <MenuItem value={9}>10000円以上</MenuItem>
+                <MenuItem value={0} style={{ fontWeight: "100" }}>
+                  選択しない
+                </MenuItem>
+                <MenuItem value={1} style={{ fontWeight: "100" }}>
+                  500円〜1000円
+                </MenuItem>
+                <MenuItem value={2} style={{ fontWeight: "100" }}>
+                  2000円〜3000円
+                </MenuItem>
+                <MenuItem value={3} style={{ fontWeight: "100" }}>
+                  3000円〜4000円
+                </MenuItem>
+                <MenuItem value={4} style={{ fontWeight: "100" }}>
+                  4000円〜5000円
+                </MenuItem>
+                <MenuItem value={5} style={{ fontWeight: "100" }}>
+                  5000円〜6000円
+                </MenuItem>
+                <MenuItem value={6} style={{ fontWeight: "100" }}>
+                  6000円〜7000円
+                </MenuItem>
+                <MenuItem value={7} style={{ fontWeight: "100" }}>
+                  7000円〜8000円
+                </MenuItem>
+                <MenuItem value={8} style={{ fontWeight: "100" }}>
+                  9000円〜10000円
+                </MenuItem>
+                <MenuItem value={9} style={{ fontWeight: "100" }}>
+                  10000円以上
+                </MenuItem>
               </Select>
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "red",
+                  width: "100%",
+                  height: "50px",
+                  margin: "50px 0 0 0",
+                }}
+              >
+                この条件で検索
+                <ArrowForwardIosIcon />
+              </Button>
+              <Button
+                variant="contained"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "50px",
+                  margin: "50px auto 0 auto",
+                  padding: "10px 0",
+                }}
+                onClick={() => {
+                  router.push(
+                    {
+                      pathname: "/",
+                    },
+                    "/"
+                  );
+                }}
+              >
+                <ArrowBackIosNewOutlined />
+                現在地検索へ戻る
+              </Button>
             </div>
           </Card>
           <Box component="div" className={styles.resDez}>
@@ -345,15 +443,6 @@ const Results = ({ data }: dt) => {
                         </Typography>
                       </div>
                     </CardContent>
-
-                    {/* <div>{ress.name}</div>
-
-              <Image
-                src={ress.logo_image + ""}
-                width={100}
-                height={100}
-                alt="ok"
-              /> */}
                   </Card>
                 );
               })
@@ -362,7 +451,6 @@ const Results = ({ data }: dt) => {
           </Box>
         </main>
       </div>
-      <button onClick={ok}>jjj</button>
     </motion.div>
   );
 };
