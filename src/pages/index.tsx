@@ -233,7 +233,7 @@ export default function Home({ data }: dt) {
                   >
                     <InputLabel
                       id="demo-simple-select-standard-label"
-                      style={{ color: "white" }}
+                      style={{ color: "white", margin: "0 auto" }}
                     >
                       検索範囲
                     </InputLabel>
