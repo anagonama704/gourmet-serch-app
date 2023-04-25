@@ -71,14 +71,18 @@ export default function Home({ data }: dt) {
       alert("現在地の取得に失敗しました");
       return;
     } else setLoad(true);
-    localStorage.setItem("lats", ppp + "");
-    localStorage.setItem("lngs", pppp + "");
-    localStorage.setItem("rangs", range + "");
+    localStorage.setItem("lats", "&lat=" + ppp);
+    localStorage.setItem("lngs", "&lng=" + pppp);
+    localStorage.setItem("rangs", "&range=" + range);
 
     router.push(
       {
         pathname: "/results",
-        query: { lat: ppp, lang: pppp, range: range },
+        query: {
+          lat: "&lat=" + ppp,
+          lang: "&lng=" + pppp,
+          range: "&range=" + range,
+        },
       },
       "/results"
     );
