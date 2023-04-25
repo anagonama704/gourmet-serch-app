@@ -15,14 +15,13 @@
   height: 85vh;
   margin: 2% 0 0 3%;
   border-radius: 20px;
-  background-color: #bbb;
   position: sticky;
   top: 90px;
   display: flex;
   align-items: center;
 }
 .inputarea {
-  width: auto;
+  width: 70%;
   height: 80%;
   margin: 0 auto;
 }
