@@ -186,7 +186,6 @@ const Results = ({ data }: dt) => {
     const ser = data.results.shop.filter(function (ress, index) {
       if (shopName !== "" && ress.name.includes(shopName)) return true;
       if (genre !== "" && ress.genre.name.includes(genre)) return true;
-      if (budgets !== "none" && ress.budget.name.includes(budgets)) return true;
     });
     const serCount = String(ser.length);
     if (ser.length == 0) {
