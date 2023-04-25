@@ -509,7 +509,6 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   //   lang = context.query.lang;
   // }
   const defaultEndpoint: string = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.API_KEY}&format=json&count=100${lat}${lang}${range}`;
-  console.log(defaultEndpoint);
   const res: Response = await fetch(defaultEndpoint);
   const data: dt = (await res.json()) ?? "値なし";
 

@@ -114,7 +114,6 @@ type dt = {
 };
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   const defaultEndpoint: string = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.API_KEY}&format=json&id=${context.query.shopId}`;
-  console.log(defaultEndpoint);
   const res: Response = await fetch(defaultEndpoint);
   const data: dt = await res.json();
 
@@ -126,7 +125,6 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
 };
 const Results_detail = ({ data }: dt) => {
   const router = useRouter();
-  console.log(data);
   useEffect(() => {}, []);
   return (
     <motion.div

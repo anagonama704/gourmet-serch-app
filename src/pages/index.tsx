@@ -66,7 +66,6 @@ export default function Home({ data }: dt) {
     push;
   });
   const ppus = () => {
-    console.log(ppp);
     if (ppp == undefined && pppp == undefined) {
       alert("現在地の取得に失敗しました");
       return;
@@ -92,8 +91,6 @@ export default function Home({ data }: dt) {
     //   lat: ppp,
     //   lang: pppp,
     // };
-    console.log(data);
-    console.log(aa);
 
     router.push(
       {
