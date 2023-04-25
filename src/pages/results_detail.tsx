@@ -129,27 +129,7 @@ const Results_detail = ({ data }: dt) => {
   console.log(data);
   useEffect(() => {}, []);
   return (
-    <motion.div
-      variants={{
-        offscreen: {
-          // 画面外の場合のスタイル
-          y: 100,
-          opacity: 0,
-        },
-        onscreen: {
-          // 画面内の場合のスタイル
-          y: 0,
-          opacity: 1,
-          transition: {
-            duration: 0.5,
-          },
-        },
-      }}
-      initial="offscreen" // 初期表示はoffscreen
-      whileInView="onscreen" // 画面内に入ったらonscreen
-      viewport={{ once: false, amount: 0 }}
-      className={styles.results_detail}
-    >
+    <div className={styles.results_detail}>
       <Header />
       <main className={styles.main}>
         {data.results.shop.map((ress, index) => {
@@ -257,7 +237,7 @@ const Results_detail = ({ data }: dt) => {
         })}
       </main>
       <Footer />
-    </motion.div>
+    </div>
   );
 };
 export default Results_detail;
