@@ -6,6 +6,8 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -234,11 +236,36 @@ const Results = ({ data }: dt) => {
                 style={{
                   backgroundColor: "#fff",
                   borderRadius: "5px",
-                  margin: "10px 0 0 0",
+                  margin: "10px 0 10px 0",
                 }}
                 name="shopname"
                 placeholder="ジャンル名称"
-              />
+              />{" "}
+              <br />
+              <label htmlFor="budget">予算</label>
+              <br />
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                style={{
+                  backgroundColor: "#fff",
+                  borderRadius: "5px",
+                  margin: "10px 0 0 0",
+                  width: "100%",
+                }}
+                name="budget"
+                defaultValue={1}
+              >
+                <MenuItem value={1}>500円〜1000円</MenuItem>
+                <MenuItem value={2}>2000円〜3000円</MenuItem>
+                <MenuItem value={3}>3000円〜4000円</MenuItem>
+                <MenuItem value={4}>4000円〜5000円</MenuItem>
+                <MenuItem value={5}>5000円〜6000円</MenuItem>
+                <MenuItem value={6}>6000円〜7000円</MenuItem>
+                <MenuItem value={7}>7000円〜8000円</MenuItem>
+                <MenuItem value={8}>9000円〜10000円</MenuItem>
+                <MenuItem value={9}>10000円以上</MenuItem>
+              </Select>
             </div>
           </Card>
           <Box component="div" className={styles.resDez}>
@@ -346,7 +373,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   let range: string;
 
   // Perform localStorage action
-  if (typeof context.query.lat == undefined) {
+  if (typeof context.query.lat == "undefined") {
     return {
       redirect: {
         permanent: false,
@@ -379,7 +406,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
   //   lat = context.query.lat;
   //   lang = context.query.lang;
   // }
-  const defaultEndpoint: string = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.API_KEY}&format=json&count=100&lat=${lat}&lng=${lang}&range=${range}`;
+  const defaultEndpoint: string = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.API_KEY}&format=json&count=100${lat}${lang}${range}`;
   console.log(defaultEndpoint);
   const res: Response = await fetch(defaultEndpoint);
   const data: dt = (await res.json()) ?? "値なし";
