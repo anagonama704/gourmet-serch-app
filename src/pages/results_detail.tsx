@@ -181,7 +181,7 @@ const Results_detail = ({ data }: dt) => {
                         overflowY: "auto",
                       }}
                     >
-                      <h3 style={{ padding: "10px 0 1px 0", fontSize: "13px" }}>
+                      <h3 style={{ padding: "10px 0 7px 0", fontSize: "15px" }}>
                         {ress.name_kana}
                       </h3>
                       <h2 className={styles.h2}>{ress.name}</h2>
