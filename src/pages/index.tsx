@@ -223,6 +223,7 @@ export default function Home({ data }: dt) {
                       display: "block",
                       fontSize: 200,
                       color: "#ccccccaa",
+                      margin: "0 auto",
                     }}
                   />
                   <FormControl
@@ -233,7 +234,7 @@ export default function Home({ data }: dt) {
                   >
                     <InputLabel
                       id="demo-simple-select-standard-label"
-                      style={{ color: "white", margin: "0 auto" }}
+                      style={{ color: "white" }}
                     >
                       検索範囲
                     </InputLabel>
