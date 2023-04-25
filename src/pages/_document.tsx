@@ -14,7 +14,6 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Oswald&display=swap"
           rel="stylesheet"
         />
-        <title>Fit&Eat</title>
       </Head>
       <body>
         <Main />
