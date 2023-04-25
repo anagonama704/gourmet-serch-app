@@ -18,7 +18,7 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { motion } from "framer-motion";
 import styles from "@/styles/ResultsDetail.module.css";
 import Footer from "./component/Footer";
-import { ArrowBackIosNewOutlined } from "@mui/icons-material";
+import ArrowBackIosNewOutlined from "@mui/icons-material/ArrowBackIosNewOutlined";
 type budgetType = {
   average: string;
   code: string;
@@ -129,7 +129,27 @@ const Results_detail = ({ data }: dt) => {
   console.log(data);
   useEffect(() => {}, []);
   return (
-    <div className={styles.results_detail}>
+    <motion.div
+      variants={{
+        offscreen: {
+          // 画面外の場合のスタイル
+          y: 100,
+          opacity: 0,
+        },
+        onscreen: {
+          // 画面内の場合のスタイル
+          y: 0,
+          opacity: 1,
+          transition: {
+            duration: 0.5,
+          },
+        },
+      }}
+      initial="offscreen" // 初期表示はoffscreen
+      whileInView="onscreen" // 画面内に入ったらonscreen
+      viewport={{ once: false, amount: 0 }}
+      className={styles.results_detail}
+    >
       <Header />
       <main className={styles.main}>
         {data.results.shop.map((ress, index) => {
@@ -237,7 +257,7 @@ const Results_detail = ({ data }: dt) => {
         })}
       </main>
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 export default Results_detail;
