@@ -1,10 +1,7 @@
 import Head from "next/head";
-import Header from "./component/Header";
-import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import {
   Button,
@@ -16,6 +13,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { motion } from "framer-motion";
 // const Hoge = dynamic(() => import(""), { ssr: false });
@@ -47,6 +45,7 @@ export default function Home({ data }: dt) {
   const [ppp, setPPP] = useState<number | null>();
   const [pppp, setPPPP] = useState<number | null>();
   const [range, setRange] = useState<string>("1");
+  const [load, setLoad] = useState(false);
   const router = useRouter();
   const pp = () => {
     navigator.geolocation.getCurrentPosition(suc, err);
@@ -68,6 +67,14 @@ export default function Home({ data }: dt) {
   });
   const ppus = () => {
     console.log(ppp);
+    if (ppp == undefined && pppp == undefined) {
+      alert("現在地の取得に失敗しました");
+      return;
+    } else setLoad(true);
+    localStorage.setItem("lats", ppp + "");
+    localStorage.setItem("lngs", pppp + "");
+    localStorage.setItem("rangs", range + "");
+
     router.push(
       {
         pathname: "/results",
@@ -83,6 +90,7 @@ export default function Home({ data }: dt) {
     // };
     console.log(data);
     console.log(aa);
+
     router.push(
       {
         pathname: "/",
@@ -98,82 +106,86 @@ export default function Home({ data }: dt) {
   };
 
   return (
-    <motion.div
-      variants={{
-        offscreen: {
-          // 画面外の場合のスタイル
-          x: 100,
-          opacity: 0,
-        },
-        onscreen: {
-          // 画面内の場合のスタイル
-          x: 0,
-          opacity: 1,
-          transition: {
-            duration: 0.3,
+    <>
+      <Head>
+        <title>Fit&Eat</title>
+      </Head>
+      <motion.div
+        variants={{
+          offscreen: {
+            // 画面外の場合のスタイル
+            x: 100,
+            opacity: 0,
           },
-        },
-      }}
-      initial="offscreen" // 初期表示はoffscreen
-      whileInView="onscreen" // 画面内に入ったらonscreen
-      viewport={{ once: false, amount: 0 }}
-      className={styles.apps}
-    >
-      <main>
-        <div
-          className={styles.mains}
-          style={{
-            width: "auto",
-            height: "100vh",
-            overflowY: "hidden",
-            position: "absolute",
-            display: "flex",
-          }}
-        >
-          <video
-            src="/gourmet.mp4"
-            poster="/backpos.png"
-            playsInline
-            muted
-            autoPlay
-            loop
-            className={styles.vid}
-          ></video>
-          <div className={styles.content}>
-            <div className={styles.c_left}>
-              <motion.div
-                variants={{
-                  offscreen: {
-                    // 画面外の場合のスタイル
-                    x: -200,
-                    opacity: 0,
-                  },
-                  onscreen: {
-                    // 画面内の場合のスタイル
-                    x: 0,
-                    opacity: 1,
-                    transition: {
-                      duration: 1,
+          onscreen: {
+            // 画面内の場合のスタイル
+            x: 0,
+            opacity: 1,
+            transition: {
+              duration: 0.3,
+            },
+          },
+        }}
+        initial="offscreen" // 初期表示はoffscreen
+        whileInView="onscreen" // 画面内に入ったらonscreen
+        viewport={{ once: false, amount: 0 }}
+        className={styles.apps}
+      >
+        <main>
+          <div
+            className={styles.mains}
+            style={{
+              width: "auto",
+              height: "100vh",
+              overflowY: "hidden",
+              position: "absolute",
+              display: "flex",
+            }}
+          >
+            <video
+              src="/gourmet.mp4"
+              poster="/backpos.png"
+              playsInline
+              muted
+              autoPlay
+              loop
+              className={styles.vid}
+            ></video>
+            <div className={styles.content}>
+              <div className={styles.c_left}>
+                <motion.div
+                  variants={{
+                    offscreen: {
+                      // 画面外の場合のスタイル
+                      x: -200,
+                      opacity: 0,
                     },
-                  },
-                }}
-                initial="offscreen" // 初期表示はoffscreen
-                whileInView="onscreen" // 画面内に入ったらonscreen
-                viewport={{ once: false, amount: 0 }}
-                className={styles.left_cmp}
-              >
-                <h1 className={styles.h1}>
-                  <p>Fit</p>
-                  <p>&</p>
-                  <p>Eat</p>
-                </h1>
-                <h2 className={styles.small}>
-                  <small>product by kei</small>
-                </h2>
-              </motion.div>
-            </div>
-            <div className={styles.c_right}>
-              {/* {ppp} <button onClick={push}>push</button>
+                    onscreen: {
+                      // 画面内の場合のスタイル
+                      x: 0,
+                      opacity: 1,
+                      transition: {
+                        duration: 1,
+                      },
+                    },
+                  }}
+                  initial="offscreen" // 初期表示はoffscreen
+                  whileInView="onscreen" // 画面内に入ったらonscreen
+                  viewport={{ once: false, amount: 0 }}
+                  className={styles.left_cmp}
+                >
+                  <h1 className={styles.h1}>
+                    <p>Fit</p>
+                    <p>&</p>
+                    <p>Eat</p>
+                  </h1>
+                  <h2 className={styles.small}>
+                    <small>product by kei</small>
+                  </h2>
+                </motion.div>
+              </div>
+              <div className={styles.c_right}>
+                {/* {ppp} <button onClick={push}>push</button>
               <Card
                 component="img"
                 src={aa + ""}
@@ -185,79 +197,82 @@ export default function Home({ data }: dt) {
               <Card>
                 <p>aaa</p>
               </Card> */}
-              <motion.div
-                variants={{
-                  offscreen: {
-                    // 画面外の場合のスタイル
-                    x: 0,
-                    opacity: 0,
-                  },
-                  onscreen: {
-                    // 画面内の場合のスタイル
-                    x: 0,
-                    opacity: 1,
-                    transition: {
-                      duration: 2,
+                <motion.div
+                  variants={{
+                    offscreen: {
+                      // 画面外の場合のスタイル
+                      x: 0,
+                      opacity: 0,
                     },
-                  },
-                }}
-                initial="offscreen" // 初期表示はoffscreen
-                whileInView="onscreen" // 画面内に入ったらonscreen
-                viewport={{ once: false, amount: 0 }}
-                className={styles.right_cmp}
-              >
-                <LocationOnIcon
-                  style={{
-                    display: "block",
-                    fontSize: 200,
-                    color: "#ccccccaa",
+                    onscreen: {
+                      // 画面内の場合のスタイル
+                      x: 0,
+                      opacity: 1,
+                      transition: {
+                        duration: 2,
+                      },
+                    },
                   }}
-                />
-                <FormControl
-                  component="div"
-                  variant="standard"
-                  sx={{ minWidth: 120 }}
-                  className={styles.range}
+                  initial="offscreen" // 初期表示はoffscreen
+                  whileInView="onscreen" // 画面内に入ったらonscreen
+                  viewport={{ once: false, amount: 0 }}
+                  className={styles.right_cmp}
                 >
-                  <InputLabel
-                    id="demo-simple-select-standard-label"
-                    style={{ color: "white" }}
-                  >
-                    検索範囲
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    className={styles.select}
-                    label="Age"
-                    value={range}
-                    style={{ color: "#fff", fontSize: "25px" }}
-                    onChange={(e) => {
-                      if (e.target.value !== undefined) {
-                        setRange(e.target.value as string);
-                      }
+                  <LocationOnIcon
+                    style={{
+                      display: "block",
+                      fontSize: 200,
+                      color: "#ccccccaa",
                     }}
+                  />
+                  <FormControl
+                    component="div"
+                    variant="standard"
+                    sx={{ minWidth: 120 }}
+                    className={styles.range}
                   >
-                    <MenuItem value={"1"}>300m</MenuItem>
-                    <MenuItem value={"2"}>500m</MenuItem>
-                    <MenuItem value={"3"}>1000m</MenuItem>
-                    <MenuItem value={"4"}>2000m</MenuItem>
-                    <MenuItem value={"5"}>3000m</MenuItem>
-                  </Select>
-                </FormControl>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={ppus}
-                  style={{ width: "100%" }}
-                >
-                  現在地から検索
-                </Button>
-              </motion.div>
+                    <InputLabel
+                      id="demo-simple-select-standard-label"
+                      style={{ color: "white" }}
+                    >
+                      検索範囲
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard"
+                      className={styles.select}
+                      label="Age"
+                      value={range}
+                      style={{ color: "#fff", fontSize: "25px" }}
+                      onChange={(e) => {
+                        if (e.target.value !== undefined) {
+                          setRange(e.target.value as string);
+                        }
+                      }}
+                    >
+                      <MenuItem value={"1"}>300m</MenuItem>
+                      <MenuItem value={"2"}>500m</MenuItem>
+                      <MenuItem value={"3"}>1000m</MenuItem>
+                      <MenuItem value={"4"}>2000m</MenuItem>
+                      <MenuItem value={"5"}>3000m</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <LoadingButton
+                    loading={load}
+                    loadingPosition="start"
+                    variant="contained"
+                    color="success"
+                    onClick={ppus}
+                    style={{ width: "100%" }}
+                  >
+                    現在地から検索
+                  </LoadingButton>
+                </motion.div>
+              </div>
             </div>
           </div>
-        </div>
-      </main>
-    </motion.div>
+        </main>
+      </motion.div>
+    </>
   );
 }
