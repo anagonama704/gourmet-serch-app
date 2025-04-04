@@ -238,7 +238,7 @@ const Results_detail = ({ data }: dt) => {
                   </IconButton>
                 </CardActions>
                 <Button
-                  variant="contained"
+                  variant="text"
                   style={{ display: "block", margin: "0 auto" }}
                   onClick={() => {
                     router.back();
