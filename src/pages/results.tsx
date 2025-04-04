@@ -129,6 +129,7 @@ type dres = {
 };
 type dt = {
   data: dres;
+  genres?: genreListType[];
 };
 interface geo {
   coords: coo;
@@ -142,20 +143,29 @@ interface coo {
   heading: number | null;
   speed: number | null;
 }
+type genreListType = {
+  code: string;
+  name: string;
+};
 
-const Results = ({ data }: dt) => {
+const Results = ({ data, genres }: dt) => {
   const router = useRouter();
-  if (typeof data == undefined) {
-    alert("ok");
-    router.back();
-  } else {
-  }
   const [res, setRes] = useState<resType[]>([]);
   const [detailData, setDetailData] = useState<resType[]>([]);
-  const [resCt, setResCt] = useState<string>();
+  const [resCt, setResCt] = useState<string>("0");
   const [shopName, setShopName] = useState<string>("");
-  const [genre, setGenre] = useState<string>("");
-  const [budgets, setBudgets] = useState<string>("");
+  const [genre, setGenre] = useState<string>("none");
+  const [genreCode, setGenreCode] = useState<string>("");
+  const [budgets, setBudgets] = useState<string>("none");
+  const [genreList, setGenreList] = useState<genreListType[]>(genres || []);
+
+  useEffect(() => {
+    if (data && data.results && data.results.shop) {
+      setRes(data.results.shop);
+      setResCt(data.results.results_returned);
+    }
+  }, [data]);
+
   const psp = () => {
     console.log(data);
     setRes(data.results.shop);
@@ -184,8 +194,22 @@ const Results = ({ data }: dt) => {
     const fullCou = data.results.results_returned;
     const full = data.results.shop;
     const ser = data.results.shop.filter(function (ress, index) {
-      if (shopName !== "" && ress.name.includes(shopName)) return true;
-      if (genre !== "" && ress.genre.name.includes(genre)) return true;
+      let match = true;
+      if (shopName !== "" && !ress.name.includes(shopName)) {
+        match = false;
+      }
+      if (genreCode !== "" && ress.genre.code !== genreCode) {
+        match = false;
+      }
+      if (budgets !== "none" && budgets !== "") {
+        const budgetValue = parseInt(
+          ress.budget.average.replace(/[^0-9]/g, "")
+        );
+        if (budgetValue > parseInt(budgets)) {
+          match = false;
+        }
+      }
+      return match;
     });
     const serCount = String(ser.length);
     if (ser.length == 0) {
@@ -226,7 +250,7 @@ const Results = ({ data }: dt) => {
           >
             <div className={styles.inputarea}>
               <Typography style={{ display: "flex", alignItems: "center" }}>
-                <p
+                <span
                   style={{
                     fontSize: "25px",
                     fontWeight: "800",
@@ -234,8 +258,8 @@ const Results = ({ data }: dt) => {
                   }}
                 >
                   {resCt}
-                </p>
-                <p>件見つかりました</p>
+                </span>
+                <span>件見つかりました</span>
               </Typography>
               <br />
               <label
@@ -271,21 +295,36 @@ const Results = ({ data }: dt) => {
                 />
                 ジャンル名称
               </label>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                size="small"
-                style={{
-                  backgroundColor: "#fff",
-                  borderRadius: "5px",
-                  margin: "10px 0 20px 0",
-                }}
-                name="shopname"
-                placeholder="ジャンル名称"
+              <Select
+                labelId="genre-select-label"
+                id="genre-select"
+                value={genre}
                 onChange={(e) => {
                   setGenre(e.target.value);
+                  const selectedGenre = genreList.find(
+                    (g) => g.name === e.target.value
+                  );
+                  setGenreCode(selectedGenre ? selectedGenre.code : "");
                 }}
-              />
+                style={{
+                  borderRadius: "5px",
+                  margin: "10px 0 20px 0",
+                  width: "100%",
+                  height: "43px",
+                  fontWeight: "100",
+                }}
+              >
+                <MenuItem value="none" selected>
+                  選択しない
+                </MenuItem>
+                {genreList &&
+                  genreList.length > 0 &&
+                  genreList.map((genre) => (
+                    <MenuItem key={genre.code} value={genre.name}>
+                      {genre.name}
+                    </MenuItem>
+                  ))}
+              </Select>
               <label
                 htmlFor="budget"
                 style={{ display: "flex", alignItems: "center" }}
@@ -304,10 +343,10 @@ const Results = ({ data }: dt) => {
                   fontWeight: "100",
                 }}
                 name="budget"
+                value={budgets}
                 onChange={(e) => {
                   setBudgets(String(e.target.value));
                 }}
-                defaultValue="none"
               >
                 <MenuItem value="none" style={{ fontWeight: "100" }}>
                   選択しない
@@ -381,8 +420,8 @@ const Results = ({ data }: dt) => {
             </div>
           </Card>
           <Box component="div" className={styles.resDez}>
-            {res
-              .map((ress, index) => {
+            {res && res.length > 0 ? (
+              res.map((ress, index) => {
                 return (
                   <Card
                     component={motion.div}
@@ -395,12 +434,10 @@ const Results = ({ data }: dt) => {
                     }}
                     variants={{
                       offscreen: {
-                        // 画面外の場合のスタイル
                         y: 100,
                         opacity: 0,
                       },
                       onscreen: {
-                        // 画面内の場合のスタイル
                         y: 0,
                         opacity: 1,
                         transition: {
@@ -413,15 +450,20 @@ const Results = ({ data }: dt) => {
                       scale: 1.1,
                       transition: { duration: 0.3 },
                     }}
-                    initial="offscreen" // 初期表示はoffscreen
-                    whileInView="onscreen" // 画面内に入ったらonscreen
+                    initial="offscreen"
+                    whileInView="onscreen"
                     viewport={{ once: false, amount: 0 }}
                     className={styles.rescard}
                     onClick={detail}
                   >
                     <CardHeader
                       avatar={
-                        <img src={ress.logo_image + ""} height={30} alt="ok" />
+                        <Image
+                          src={ress.logo_image + ""}
+                          width={30}
+                          height={30}
+                          alt="ok"
+                        />
                       }
                       title={ress.name}
                       titleTypographyProps={{
@@ -460,7 +502,11 @@ const Results = ({ data }: dt) => {
                   </Card>
                 );
               })
-              .filter((ress) => ress)}
+            ) : (
+              <Typography style={{ textAlign: "center", marginTop: "2rem" }}>
+                検索結果がありません
+              </Typography>
+            )}
             <Footer />
           </Box>
         </main>
@@ -487,34 +533,28 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     lang = String(context.query.lang);
     range = String(context.query.range);
   }
-
-  // console.log(context.query.lat);
-  // const pp = () => {
-  //   navigator.geolocation.getCurrentPosition(suc, err);
-  // };
-  // const suc = (geos: geo) => {
-  //   const lat: string = String(geos.coords.latitude);
-  //   const lang: string = String(geos.coords.longitude);
-  //   console.log("succ");
-  // };
-  // const err = () => {
-  //   console.log("err");
-  // };
-  // pp;
-  // if (!context.query) {
-  //   lat = 33;
-  //   lang = 23;
-  // } else {
-  //   lat = context.query.lat;
-  //   lang = context.query.lang;
-  // }
   const defaultEndpoint: string = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.API_KEY}&format=json&count=100${lat}${lang}${range}`;
   const res: Response = await fetch(defaultEndpoint);
   const data: dt = (await res.json()) ?? "値なし";
 
+  // ジャンル一覧を取得
+  let genres: genreListType[] = [];
+  try {
+    const genreResponse = await fetch(
+      `https://webservice.recruit.co.jp/hotpepper/genre/v1/?key=${process.env.API_KEY}&format=json`
+    );
+    const genreData = await genreResponse.json();
+    if (genreData.results && genreData.results.genre) {
+      genres = genreData.results.genre;
+    }
+  } catch (error) {
+    console.error("ジャンル一覧の取得に失敗しました:", error);
+  }
+
   return {
     props: {
       data,
+      genres,
     },
   };
 };
