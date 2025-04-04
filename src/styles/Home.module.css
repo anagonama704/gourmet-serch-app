@@ -1,5 +1,5 @@
 .apps {
-  width: 170vw;
+  width: 100%;
   height: 100vh;
   overflow-y: hidden;
   z-index: 1;
@@ -35,36 +35,48 @@
   height: 100vh;
   position: absolute;
   left: 0;
+  top: 0;
   background-color: transparent;
   z-index: 10;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 2rem;
 }
 .c_left {
-  width: 58.5%;
+  width: 100%;
   height: auto;
-  padding: 0 0 150px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .left_cmp {
   width: fit-content;
   height: auto;
-  margin: 0 auto;
+  text-align: center;
 }
 .c_right {
-  width: 41.5%;
+  width: 100%;
   height: auto;
-  padding: 0 0 50px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .right_cmp {
-  width: fit-content;
+  width: 80%;
+  max-width: 500px;
   height: auto;
-  margin: 0 0 0 16%;
+  margin: 0 auto;
   padding: 30px;
   background-color: #ffffff05;
   backdrop-filter: blur(12px);
   border: 2px #eeeeee10 solid;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
 .small {
   font-family: "Caveat", cursive;
