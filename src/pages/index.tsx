@@ -115,12 +115,12 @@ export default function Home({ data }: dt) {
         variants={{
           offscreen: {
             // 画面外の場合のスタイル
-            x: 100,
+            y: -100,
             opacity: 0,
           },
           onscreen: {
             // 画面内の場合のスタイル
-            x: 0,
+            y: 0,
             opacity: 1,
             transition: {
               duration: 0.3,
@@ -133,16 +133,7 @@ export default function Home({ data }: dt) {
         className={styles.apps}
       >
         <main>
-          <div
-            className={styles.mains}
-            style={{
-              width: "auto",
-              height: "100vh",
-              overflowY: "hidden",
-              position: "absolute",
-              display: "flex",
-            }}
-          >
+          <div className={styles.mains}>
             <video
               src="/gourmet.mp4"
               poster="/backpos.png"
