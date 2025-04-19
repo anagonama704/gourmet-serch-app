@@ -1,23 +1,3 @@
-# グルメ検索アプリ
-
-## 概要
-
-現在地周辺の飲食店情報を検索できる
-
-## API
-
-[ホットペッパーグルメ API](https://webservice.recruit.co.jp/doc/hotpepper/reference.html)
-
-## フレームワーク
-
-[Next.js](https://nextjs.org/)
-
-## CI/CD
-
-[Vercel](https://vercel.com/docs)
-
-# 開発環境
-
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
